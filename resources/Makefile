@@ -69,6 +69,7 @@ OBJECTS += $(S)/rtc_base/strings/string_format.o
 OBJECTS += $(S)/rtc_base/system_time.o
 OBJECTS += $(S)/rtc_base/time_utils.o
 OBJECTS += $(S)/third_party/abseil-cpp/absl/base/internal/raw_logging.o
+OBJECTS += $(S)/third_party/abseil-cpp/absl/strings/string_view.o
 OBJECTS += $(S)/third_party/abseil-cpp/absl/types/bad_variant_access.o
 OBJECTS += $(S)/third_party/crc32c/src/src/crc32c.o
 OBJECTS += $(S)/third_party/crc32c/src/src/crc32c_portable.o

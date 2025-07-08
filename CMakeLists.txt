@@ -62,12 +62,16 @@ target_compile_options(${PROJECT_NAME} PRIVATE
                        -fno-rtti
                        )
 
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} PRIVATE
                            ${JNI_INCLUDE_DIRS}
                            ${CMAKE_CURRENT_LIST_DIR}/target/native/jnigen
+                           )
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
                            ${WEBRTC_DIR}
                            ${WEBRTC_DIR}/third_party/abseil-cpp
                            )
+
 
 install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION "."
