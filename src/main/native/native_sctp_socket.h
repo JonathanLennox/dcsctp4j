@@ -31,6 +31,6 @@ struct NativeSctpSocket {
 dcsctp::DcSctpMessage convertDcSctpMessage(JNIEnv* env, jDcSctpMessage jMessage);
 dcsctp::SendOptions convertSendOptions(JNIEnv* env, jSendOptions jOptions);
 
-jDcSctpMessage convertDcSctpMessage(JNIEnv* env, dcsctp::DcSctpMessage message);
+smjni::local_java_ref<jDcSctpMessage> convertDcSctpMessage(JNIEnv* env, const dcsctp::DcSctpMessage& message);
 
 #endif

@@ -70,8 +70,7 @@ NATIVE_PROLOG
         return nullptr;
     }
 
-    /* TODO */
-    return nullptr;
+    return convertDcSctpMessage(env, *msg).release();
 NATIVE_EPILOG_Z
 }
 
@@ -279,7 +278,7 @@ DcSctpMessage convertDcSctpMessage(JNIEnv* env, jDcSctpMessage jmessage)
     return message;
 }
 
-jDcSctpMessage convertDcSctpMessage(JNIEnv* env, DcSctpMessage message)
+local_java_ref<jDcSctpMessage> convertDcSctpMessage(JNIEnv* env, const DcSctpMessage& message)
 {
     auto payload = message.payload();
     auto jPayload = java_array_create<jbyte>(env, payload.size());
@@ -290,7 +289,7 @@ jDcSctpMessage convertDcSctpMessage(JNIEnv* env, DcSctpMessage message)
     auto messageClass = java_classes::get<DcSctpMessage_class>();
     auto jmessage = messageClass.ctor(env, *message.stream_id(), *message.ppid(), jPayload);
 
-    return jmessage.release();
+    return jmessage;
 }
 
 SendOptions convertSendOptions(JNIEnv* env, jSendOptions jOptions)
