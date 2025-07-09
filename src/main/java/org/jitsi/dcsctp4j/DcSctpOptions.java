@@ -264,7 +264,7 @@ public class DcSctpOptions
      * processing time of received packets and the clock granularity when setting
      * the delayed ack timer on the peer.
      *
-     * his is defined as "G" in the algorithm for TCP in
+     * This is defined as "G" in the algorithm for TCP in
      * https://datatracker.ietf.org/doc/html/rfc6298#section-4.
      *
      * Note that this value will be further adjusted by scaling factors, so if you
