@@ -93,14 +93,16 @@ public class DcSctpSocketFactory
         private native void receivePacket_(long ptr, byte[] data, int offset, int length);
 
         @Override
-        public synchronized long messagesReady() {
+        public synchronized long messagesReady()
+        {
             return messagesReady_(ptr);
         }
 
         private native long messagesReady_(long ptr);
 
         @Override
-        public synchronized DcSctpMessage getNextMessage() {
+        public synchronized DcSctpMessage getNextMessage()
+        {
             return getNextMessage_(ptr);
         }
 

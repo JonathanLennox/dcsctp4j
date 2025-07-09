@@ -123,7 +123,7 @@ public interface DcSctpSocketCallbacks
      * It is allowed to call into this library from within this callback.
      */
     @CalledByNative
-    void OnMessageReady();
+    default void OnMessageReady() {}
 
     /**
      * Triggered when an non-fatal error is reported by either this library or
