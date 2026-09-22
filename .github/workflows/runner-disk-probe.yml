@@ -1,0 +1,59 @@
+name: Runner disk probe
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    name: ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ ubuntu-24.04, ubuntu-24.04-arm, macos-26, macos-15 ]
+    steps:
+      - name: Disk before
+        run: df -h
+
+      - name: Sizes of removal candidates (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo du -xsh /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache \
+            /usr/lib/jvm /usr/local/share/powershell /usr/share/miniconda 2>/dev/null | sort -h || true
+          docker image ls --format '{{.Repository}}:{{.Tag}} {{.Size}}' 2>/dev/null || true
+          swapon --show || true
+
+      - name: Sizes of removal candidates (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          ls -d /Applications/Xcode*.app
+          readlink /Applications/Xcode.app || xcode-select -p
+          sudo du -xsh /Applications/Xcode_*.app 2>/dev/null | sort -h || true
+          sudo du -xsh "$ANDROID_HOME" /usr/local/share/dotnet /Library/Developer/CoreSimulator \
+            ~/Library/Developer/CoreSimulator /Users/runner/hostedtoolcache /opt/homebrew 2>/dev/null | sort -h || true
+
+      - name: Free space (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          time sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost
+          time sudo docker image prune -af >/dev/null 2>&1 || true
+          sudo swapoff -a || true; sudo rm -f /mnt/swapfile /swapfile || true
+
+      - name: Free space (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          default=$(readlink /Applications/Xcode.app || true)
+          for x in /Applications/Xcode_*.app; do
+            case "$(basename "$x")" in "$(basename "${default:-none}")") ;; *) echo "removing $x"; time sudo rm -rf "$x";; esac
+          done
+          time sudo rm -rf "$ANDROID_HOME" /usr/local/share/dotnet /Library/Developer/CoreSimulator/Profiles/Runtimes 2>/dev/null || true
+
+      - name: Disk after
+        run: df -h
+
+      - name: depot_tools clone timing
+        run: |
+          time git clone --quiet https://chromium.googlesource.com/chromium/tools/depot_tools.git "$RUNNER_TEMP/depot_tools"
+          du -sh "$RUNNER_TEMP/depot_tools"
