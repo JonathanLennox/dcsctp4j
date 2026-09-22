@@ -2,6 +2,8 @@ name: Runner disk probe
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ runner-disk-probe ]
 
 jobs:
   probe:
